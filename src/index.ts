@@ -55,8 +55,8 @@ class RDBroadcast {
         )
     }
 
-    public broadcast = (value: ReducerInterface.BroadCast): void => {
-        this.store ? this.store.dispatch({type: value.key, payload: value}) : console.error('[-] Store is not ready.')
+    public broadcast = (signalName: string, payload: any): void => {
+        this.store ? this.store.dispatch({type: signalName, payload: payload}) : console.error('[-] Store is not ready.')
     }
 
     public storeChecker = (callback: (state: boolean) => void, timer: number): void => {
