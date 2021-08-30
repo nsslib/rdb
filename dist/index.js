@@ -78,8 +78,8 @@ var RDBroadcast = /** @class */ (function () {
                 console.log("[+] Redux devtool enabled, but there are no devtool plugin!");
             _this.store = redux_1.createStore(_this.reducer, redux_1.applyMiddleware.apply(void 0, middlewares));
         };
-        this.broadcast = function (value) {
-            _this.store ? _this.store.dispatch({ type: value.key, payload: value }) : console.error('[-] Store is not ready.');
+        this.broadcast = function (signalName, payload) {
+            _this.store ? _this.store.dispatch({ type: signalName, payload: payload }) : console.error('[-] Store is not ready.');
         };
         this.storeChecker = function (callback, timer) {
             var storeChecker = setInterval(function () {

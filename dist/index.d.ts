@@ -25,7 +25,7 @@ declare class RDBroadcast {
     */
     setInitialState: (obj: KeyValue) => void;
     createStore: (devtoolEnabled: boolean, ...middlewares: any[]) => void;
-    broadcast: (value: ReducerInterface.BroadCast) => void;
+    broadcast: (signalName: string, payload: any) => void;
     storeChecker: (callback: (state: boolean) => void, timer: number) => void;
     hoc: <T>(Wrapper: any, WrapperStyle: KeyValue, MainComponent: React.ComponentType<any>) => React.ComponentType<T>;
     Dhoc: <T>(Wrapper: any, WrapperStyle: KeyValue) => any;
