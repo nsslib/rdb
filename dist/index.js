@@ -50,10 +50,10 @@ var RDBroadcast = /** @class */ (function () {
         var _this = this;
         this.reducer = function (state, action) {
             if (state === void 0) { state = _this.initialState; }
-            var _state = {};
+            var data = {}; // any data for your signal
             try {
-                _state[action.payload.key] = action.payload.value;
-                state = __assign(__assign({}, state), _state);
+                data[action.type] = action.payload;
+                state = __assign(__assign({}, state), data);
             }
             catch (error) {
                 // prevents uninitialized key errors, we know what the heck is the error!!!
@@ -65,10 +65,14 @@ var RDBroadcast = /** @class */ (function () {
          * Public Methods
          *
         */
-        // 1) enable devtool, 2) insert initial state, 3) define middlewares as many as you want...
         this.setInitialState = function (obj) {
             _this.initialState = obj;
         };
+        /**
+         *
+         * @param devtoolEnabled This parameter currently not working, we can modify it for furthere use.
+         * @param middlewares Define as you want as middlewares for your store.
+         */
         this.createStore = function (devtoolEnabled) {
             var middlewares = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -78,6 +82,11 @@ var RDBroadcast = /** @class */ (function () {
                 console.log("[+] Redux devtool enabled, but there are no devtool plugin!");
             _this.store = redux_1.createStore(_this.reducer, redux_1.applyMiddleware.apply(void 0, middlewares));
         };
+        /**
+         *
+         * @param signalName This is the "type" of dispatch in redux
+         * @param payload This is th "payload" of dispatch in redux
+         */
         this.broadcast = function (signalName, payload) {
             _this.store ? _this.store.dispatch({ type: signalName, payload: payload }) : console.error('[-] Store is not ready.');
         };

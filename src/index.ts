@@ -20,15 +20,15 @@ import { connect, Provider } from 'react-redux'
 import { KeyValue, ReducerInterface } from './models'
 
 class RDBroadcast {
-    protected initialState: KeyValue;
+    private initialState: KeyValue;
     public store: Store; // redux store
 
-    protected reducer = (state: any = this.initialState, action: ReducerInterface.Action): void => {
-        let _state: any = {}
+    private reducer = (state: any = this.initialState, action: ReducerInterface.Action): void => {
+        let data: any = {} // any data for your signal
 
         try {
-            _state[action.payload.key] = action.payload.value;
-            state = {...state, ..._state};
+            data[action.type] = action.payload;
+            state = {...state, ...data};
         } catch (error) {
             // prevents uninitialized key errors, we know what the heck is the error!!!
         }
@@ -42,11 +42,15 @@ class RDBroadcast {
      * 
     */
 
-    // 1) enable devtool, 2) insert initial state, 3) define middlewares as many as you want...
     public setInitialState = (obj: KeyValue): void => {
         this.initialState = obj;
     }
 
+    /**
+     * 
+     * @param devtoolEnabled This parameter currently not working, we can modify it for furthere use.
+     * @param middlewares Define as you want as middlewares for your store.
+     */
     public createStore = (devtoolEnabled: boolean, ...middlewares: any[]): void => {
         if(devtoolEnabled) console.log("[+] Redux devtool enabled, but there are no devtool plugin!");
         this.store = createStore(
@@ -55,8 +59,13 @@ class RDBroadcast {
         )
     }
 
+    /**
+     * 
+     * @param signalName This is the "type" of dispatch in redux
+     * @param payload This is th "payload" of dispatch in redux
+     */
     public broadcast = (signalName: string, payload: any): void => {
-        this.store ? this.store.dispatch({type: signalName, payload: payload}) : console.error('[-] Store is not ready.')
+        this.store ? this.store.dispatch({type: signalName, payload}) : console.error('[-] Store is not ready.')
     }
 
     public storeChecker = (callback: (state: boolean) => void, timer: number): void => {
