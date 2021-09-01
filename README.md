@@ -40,13 +40,15 @@ import rdb from "@utils/Statemanager"
 const App = () => {
   return (
     <Provider store={rdb.store}>
-      ...
+      <Header />
+      <Footer />
     </Provider>
   );
 };
 
 ```
 
+Here is components that should communicate using RDB
 ``` javascript
 // A Header component lets say Header.js
 // Lets say we have defined more components such that.
