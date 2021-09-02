@@ -10,12 +10,13 @@ Lets say we have language code for changing the app language dynamically and we 
 
 As we said, there is no actions and reducers.
 
-``` javascript
+``` typescript
 // utils/Statemanager.js 
 
 //This is your rdb file where you created your store and exported modified rdb for your app.
 
-import { RDBroadcast } from "rdb";
+import ReduxThunk from "redux-thunk";
+import { RDBroadcast, Provider } from "rdb";
 
 // this is the global state for your app, there is no any other state will be defined in the app, just make one such that. I usually give names to keys starting with "s_" to indicate it is a signal.
 let globalstate = {
@@ -24,9 +25,18 @@ let globalstate = {
 
 const rdb = new RDBroadcast();
 rdb.setInitialState(globalstate);
-export default rdb
+rdb.createStore(false, ReduxThunk);
+
+const rdbconnect = <T>(Component: React.ComponentType<T>): React.ComponentType<T> => {
+	return rdb.hoc<T>(React.Fragment, {}, Component);
+};
+
+export { Provider, rdb, rdbconnect };
+
 /**
  * Now rdb is instantiated and exported, use this instantiate to reach your global state.
+ * 
+ * In the App never use **import from 'rdb'**, import from here.
  * /
 ```
 
@@ -34,8 +44,7 @@ export default rdb
 // App.js your main file for the app.
 // You typically define your routing inside App > Provider
 
-import { Provider } from "rdb"; // use Provider from rdb, it is tha same provider as Redux.
-import rdb from "@utils/Statemanager"
+import { rdb, Provider } from "@utils/Statemanager"
 
 const App = () => {
   return (
@@ -54,7 +63,7 @@ Here is components that should communicate using RDB
 // Lets say we have defined more components such that.
 
 // utils
-import rdb from "@utils/globalstate";
+import { rdbconnect } from "@utils/Statemanager";
 
 const Header = () => {
   return (
@@ -66,7 +75,7 @@ const Header = () => {
   );
 };
 
-export default rdb.hoc(React.Fragmant, {}, Header);
+export default rdbconnect(Header);
 // export default rdb.hoc<T>(React.Fragmant, {}, Header); also you can export it with interfaces.
 
 ```
@@ -76,7 +85,7 @@ export default rdb.hoc(React.Fragmant, {}, Header);
 // Lets say we have defined more components such that.
 
 // utils
-import rdb from "@utils/globalstate";
+import { rdbconnect } from "@utils/Statemanager";
 
 interface Props {
 
@@ -92,7 +101,7 @@ const Footer: React.FC<Props> = (props) => {
   );
 };
 
-export default rdb.hoc(React.Fragmant, {}, Header);
+export default rdbconnect(Footer);
 // export default rdb.hoc<T>(React.Fragmant, {}, Header); also you can export it with interfaces.
 
 ```
