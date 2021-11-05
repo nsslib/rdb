@@ -64,7 +64,7 @@ class RDBroadcast {
      * @param signalName This is the "type" of dispatch in redux
      * @param payload This is th "payload" of dispatch in redux
      */
-    public broadcast = (signalName: string, payload: any): void => {
+    public broadcast = <T>(signalName: string, payload: T): void => {
         this.store ? this.store.dispatch({type: signalName, payload}) : console.error('[-] Store is not ready.')
     }
 

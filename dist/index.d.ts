@@ -35,7 +35,7 @@ declare class RDBroadcast {
      * @param signalName This is the "type" of dispatch in redux
      * @param payload This is th "payload" of dispatch in redux
      */
-    broadcast: (signalName: string, payload: any) => void;
+    broadcast: <T>(signalName: string, payload: T) => void;
     storeChecker: (callback: (state: boolean) => void, timer: number) => void;
     hoc: <T>(Wrapper: any, WrapperStyle: KeyValue, MainComponent: React.ComponentType<any>) => React.ComponentType<T>;
     Dhoc: <T>(Wrapper: any, WrapperStyle: KeyValue) => any;
